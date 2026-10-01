@@ -1,0 +1,46 @@
+{
+  "run_name": "picto_text_Qwen3.5-2B",
+  "mode": "picto",
+  "model": "Qwen/Qwen3.5-2B",
+  "init": "text",
+  "init_stats": {
+    "init": "text",
+    "text_used": 4333,
+    "image_used": 0,
+    "fallback_random": 681,
+    "target_norm": 0.6758821606636047
+  },
+  "lora_targets": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "in_proj_qkv",
+    "in_proj_z",
+    "out_proj"
+  ],
+  "trainable": "16,461,824 trainable / 1,221,699,392 total (1.347%)",
+  "epochs": 1,
+  "lr": 0.0002,
+  "seed": 42,
+  "include_sentence": false,
+  "prompt_version": 2,
+  "dtype": "torch.bfloat16",
+  "effective_batch": 16,
+  "train_steps": 50358,
+  "val_steps": 2000,
+  "batch_size": 16,
+  "token_lengths": {
+    "mean": 56.736,
+    "p50": 56,
+    "p95": 62,
+    "max": 66,
+    "over_max_len": 0.0
+  },
+  "train_seconds": 5360.450674295425,
+  "n_picto_tokens": 5014,
+  "split": "test",
+  "n": 8467,
+  "constrained": false,
+  "seconds": 2588.6333963871
+}

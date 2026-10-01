@@ -1,0 +1,40 @@
+{
+  "run_name": "id_Qwen3.5-0.8B",
+  "mode": "id",
+  "model": "Qwen/Qwen3.5-0.8B",
+  "init": null,
+  "init_stats": null,
+  "lora_targets": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "o_proj",
+    "in_proj_qkv",
+    "in_proj_z",
+    "out_proj"
+  ],
+  "trainable": "4,915,200 trainable / 508,500,800 total (0.967%)",
+  "epochs": 1,
+  "lr": 0.0002,
+  "seed": 42,
+  "include_sentence": false,
+  "prompt_version": 2,
+  "dtype": "torch.bfloat16",
+  "effective_batch": 16,
+  "train_steps": 50358,
+  "val_steps": 2000,
+  "batch_size": 16,
+  "token_lengths": {
+    "mean": 218.294,
+    "p50": 214,
+    "p95": 272,
+    "max": 331,
+    "over_max_len": 0.0
+  },
+  "train_seconds": 11452.435881137848,
+  "n_picto_tokens": 0,
+  "split": "test",
+  "n": 8467,
+  "constrained": false,
+  "seconds": 3905.4612760543823
+}

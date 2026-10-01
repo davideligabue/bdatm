@@ -1,0 +1,332 @@
+{
+  "runs": {
+    "picto_text_Qwen3.5-2B": [
+      {
+        "setting": "no constraint",
+        "sweep": "none",
+        "hit@1": 0.39163812448328805,
+        "mrr": 0.6069959281693071,
+        "gold_removed": 0.0
+      },
+      {
+        "setting": "10% of non-test data",
+        "sweep": "train",
+        "fraction": 0.1,
+        "n_sentences": 5279,
+        "hit@1": 0.40002362111727885,
+        "mrr": 0.6129117526306613,
+        "gold_removed": 0.17444195110428723
+      },
+      {
+        "setting": "25% of non-test data",
+        "sweep": "train",
+        "fraction": 0.25,
+        "n_sentences": 13199,
+        "hit@1": 0.40061414904925,
+        "mrr": 0.6130155168244219,
+        "gold_removed": 0.1867249320892878
+      },
+      {
+        "setting": "50% of non-test data",
+        "sweep": "train",
+        "fraction": 0.5,
+        "n_sentences": 26398,
+        "hit@1": 0.4032124719499232,
+        "mrr": 0.6150819427806554,
+        "gold_removed": 0.19392937285933626
+      },
+      {
+        "setting": "100% of non-test data",
+        "sweep": "train",
+        "fraction": 1.0,
+        "n_sentences": 52797,
+        "hit@1": 0.40687374512814456,
+        "mrr": 0.6175430382380896,
+        "gold_removed": 0.19463800637770168
+      },
+      {
+        "setting": "non-test + 0% of test",
+        "sweep": "test",
+        "fraction": 0.0,
+        "seeds": 5,
+        "hit@1": 0.40687374512814456,
+        "hit@1_sd": 0.0,
+        "gold_removed": 0.19463800637770168,
+        "gold_removed_sd": 0.0,
+        "hit@1_covered": null,
+        "hit@1_covered_sd": null,
+        "hit@1_uncovered": 0.40687374512814456,
+        "hit@1_uncovered_sd": 0.0
+      },
+      {
+        "setting": "non-test + 10% of test",
+        "sweep": "test",
+        "fraction": 0.1,
+        "seeds": 5,
+        "hit@1": 0.4355970237392229,
+        "hit@1_sd": 0.0008196221364307407,
+        "gold_removed": 0.17484351009802762,
+        "gold_removed_sd": 0.001134305629247002,
+        "hit@1_covered": 0.6986448929752547,
+        "hit@1_covered_sd": 0.009295649922497496,
+        "hit@1_uncovered": 0.40665937363937515,
+        "hit@1_uncovered_sd": 0.0006163558752845706
+      },
+      {
+        "setting": "non-test + 25% of test",
+        "sweep": "test",
+        "fraction": 0.25,
+        "seeds": 5,
+        "hit@1": 0.4797448919333884,
+        "hit@1_sd": 0.0027536590378257385,
+        "gold_removed": 0.14619109483878584,
+        "gold_removed_sd": 0.0017995509110420142,
+        "hit@1_covered": 0.7005209706447009,
+        "hit@1_covered_sd": 0.006332905474943222,
+        "hit@1_uncovered": 0.4065373368559494,
+        "hit@1_uncovered_sd": 0.003844449261372228
+      },
+      {
+        "setting": "non-test + 50% of test",
+        "sweep": "test",
+        "fraction": 0.5,
+        "seeds": 5,
+        "hit@1": 0.5553797094602574,
+        "hit@1_sd": 0.0016911796215584114,
+        "gold_removed": 0.09623243179402385,
+        "gold_removed_sd": 0.0019181161734415301,
+        "hit@1_covered": 0.705330781491467,
+        "hit@1_covered_sd": 0.004650321006030565,
+        "hit@1_uncovered": 0.40551010795198933,
+        "hit@1_uncovered_sd": 0.006579128589672497
+      },
+      {
+        "setting": "non-test + 75% of test",
+        "sweep": "test",
+        "fraction": 0.75,
+        "seeds": 5,
+        "hit@1": 0.6318176449746072,
+        "hit@1_sd": 0.0018029582744548427,
+        "gold_removed": 0.04736034014408881,
+        "gold_removed_sd": 0.0021285235055757768,
+        "hit@1_covered": 0.7074622012250751,
+        "hit@1_covered_sd": 0.0017764755675177494,
+        "hit@1_uncovered": 0.40557723785478583,
+        "hit@1_uncovered_sd": 0.011624627979000553
+      },
+      {
+        "setting": "non-test + 100% of test",
+        "sweep": "test",
+        "fraction": 1.0,
+        "seeds": 5,
+        "hit@1": 0.7085154127790244,
+        "hit@1_sd": 0.0,
+        "gold_removed": 0.0,
+        "gold_removed_sd": 0.0,
+        "hit@1_covered": 0.7085154127790244,
+        "hit@1_covered_sd": 0.0,
+        "hit@1_uncovered": null,
+        "hit@1_uncovered_sd": null
+      },
+      {
+        "setting": "soft prior lambda=0.25",
+        "sweep": "soft",
+        "lambda": 0.25,
+        "hit@1": 0.3935278138655958,
+        "mrr": 0.6081435207837711
+      },
+      {
+        "setting": "soft prior lambda=0.5",
+        "sweep": "soft",
+        "lambda": 0.5,
+        "hit@1": 0.39541750324790365,
+        "mrr": 0.6092005657819997
+      },
+      {
+        "setting": "soft prior lambda=1.0",
+        "sweep": "soft",
+        "lambda": 1.0,
+        "hit@1": 0.39624424235266326,
+        "mrr": 0.6102154302136586
+      },
+      {
+        "setting": "soft prior lambda=2.0",
+        "sweep": "soft",
+        "lambda": 2.0,
+        "hit@1": 0.3983701429077595,
+        "mrr": 0.6115656301495441
+      },
+      {
+        "setting": "soft prior lambda=5.0",
+        "sweep": "soft",
+        "lambda": 5.0,
+        "hit@1": 0.3975434038029999,
+        "mrr": 0.6112956745235002
+      }
+    ],
+    "picto_text_Qwen3.5-2B_fullsent": [
+      {
+        "setting": "no constraint",
+        "sweep": "none",
+        "hit@1": 0.6786346994212826,
+        "mrr": 0.8036600077612241,
+        "gold_removed": 0.0
+      },
+      {
+        "setting": "10% of non-test data",
+        "sweep": "train",
+        "fraction": 0.1,
+        "n_sentences": 5279,
+        "hit@1": 0.6161568442187315,
+        "mrr": 0.7657379911926977,
+        "gold_removed": 0.17444195110428723
+      },
+      {
+        "setting": "25% of non-test data",
+        "sweep": "train",
+        "fraction": 0.25,
+        "n_sentences": 13199,
+        "hit@1": 0.6063540805480099,
+        "mrr": 0.7606654968589538,
+        "gold_removed": 0.1867249320892878
+      },
+      {
+        "setting": "50% of non-test data",
+        "sweep": "train",
+        "fraction": 0.5,
+        "n_sentences": 26398,
+        "hit@1": 0.6030471241289713,
+        "mrr": 0.7578291349609408,
+        "gold_removed": 0.19392937285933626
+      },
+      {
+        "setting": "100% of non-test data",
+        "sweep": "train",
+        "fraction": 1.0,
+        "n_sentences": 52797,
+        "hit@1": 0.6012755403330577,
+        "mrr": 0.7568828842509012,
+        "gold_removed": 0.19463800637770168
+      },
+      {
+        "setting": "non-test + 0% of test",
+        "sweep": "test",
+        "fraction": 0.0,
+        "seeds": 5,
+        "hit@1": 0.6012755403330577,
+        "hit@1_sd": 0.0,
+        "gold_removed": 0.19463800637770168,
+        "gold_removed_sd": 0.0,
+        "hit@1_covered": null,
+        "hit@1_covered_sd": null,
+        "hit@1_uncovered": 0.6012755403330577,
+        "hit@1_uncovered_sd": 0.0
+      },
+      {
+        "setting": "non-test + 10% of test",
+        "sweep": "test",
+        "fraction": 0.1,
+        "seeds": 5,
+        "hit@1": 0.6268572103460494,
+        "hit@1_sd": 0.0007417181277008519,
+        "gold_removed": 0.17484351009802762,
+        "gold_removed_sd": 0.001134305629247002,
+        "hit@1_covered": 0.854096399904504,
+        "hit@1_covered_sd": 0.009460461123366706,
+        "hit@1_uncovered": 0.6018612354560134,
+        "hit@1_uncovered_sd": 0.0008629909365801196
+      },
+      {
+        "setting": "non-test + 25% of test",
+        "sweep": "test",
+        "fraction": 0.25,
+        "seeds": 5,
+        "hit@1": 0.664485650171253,
+        "hit@1_sd": 0.0014180541887141758,
+        "gold_removed": 0.14619109483878584,
+        "gold_removed_sd": 0.0017995509110420142,
+        "hit@1_covered": 0.8574356316102418,
+        "hit@1_covered_sd": 0.0039734626049373264,
+        "hit@1_uncovered": 0.600511193020588,
+        "hit@1_uncovered_sd": 0.0024621612380282213
+      },
+      {
+        "setting": "non-test + 50% of test",
+        "sweep": "test",
+        "fraction": 0.5,
+        "seeds": 5,
+        "hit@1": 0.7306720207865831,
+        "hit@1_sd": 0.0021253755765587882,
+        "gold_removed": 0.09623243179402385,
+        "gold_removed_sd": 0.0019181161734415301,
+        "hit@1_covered": 0.8623743800314276,
+        "hit@1_covered_sd": 0.003998308468869025,
+        "hit@1_uncovered": 0.5990423355325639,
+        "hit@1_uncovered_sd": 0.0058600178589690395
+      },
+      {
+        "setting": "non-test + 75% of test",
+        "sweep": "test",
+        "fraction": 0.75,
+        "seeds": 5,
+        "hit@1": 0.7963623479390576,
+        "hit@1_sd": 0.0012838245651778828,
+        "gold_removed": 0.04736034014408881,
+        "gold_removed_sd": 0.0021285235055757768,
+        "hit@1_covered": 0.8621285767346805,
+        "hit@1_covered_sd": 0.001974036523942213,
+        "hit@1_uncovered": 0.5996550301500202,
+        "hit@1_uncovered_sd": 0.007536822150029157
+      },
+      {
+        "setting": "non-test + 100% of test",
+        "sweep": "test",
+        "fraction": 1.0,
+        "seeds": 5,
+        "hit@1": 0.8620526750915317,
+        "hit@1_sd": 1.1102230246251565e-16,
+        "gold_removed": 0.0,
+        "gold_removed_sd": 0.0,
+        "hit@1_covered": 0.8620526750915317,
+        "hit@1_covered_sd": 1.1102230246251565e-16,
+        "hit@1_uncovered": null,
+        "hit@1_uncovered_sd": null
+      },
+      {
+        "setting": "soft prior lambda=0.25",
+        "sweep": "soft",
+        "lambda": 0.25,
+        "hit@1": 0.6776898547301288,
+        "mrr": 0.8032976766943933
+      },
+      {
+        "setting": "soft prior lambda=0.5",
+        "sweep": "soft",
+        "lambda": 0.5,
+        "hit@1": 0.6775717491437345,
+        "mrr": 0.8030459993138628
+      },
+      {
+        "setting": "soft prior lambda=1.0",
+        "sweep": "soft",
+        "lambda": 1.0,
+        "hit@1": 0.6754458485886382,
+        "mrr": 0.8015715073084861
+      },
+      {
+        "setting": "soft prior lambda=2.0",
+        "sweep": "soft",
+        "lambda": 2.0,
+        "hit@1": 0.6681233022321956,
+        "mrr": 0.7976484334137576
+      },
+      {
+        "setting": "soft prior lambda=5.0",
+        "sweep": "soft",
+        "lambda": 5.0,
+        "hit@1": 0.6387150112200307,
+        "mrr": 0.7806647094883779
+      }
+    ]
+  }
+}

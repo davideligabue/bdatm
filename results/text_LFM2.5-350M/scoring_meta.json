@@ -1,0 +1,38 @@
+{
+  "run_name": "text_LFM2.5-350M",
+  "mode": "text",
+  "model": "LiquidAI/LFM2.5-350M",
+  "init": null,
+  "init_stats": null,
+  "lora_targets": [
+    "q_proj",
+    "k_proj",
+    "v_proj",
+    "out_proj",
+    "in_proj"
+  ],
+  "trainable": "1,671,168 trainable / 212,500,224 total (0.786%)",
+  "epochs": 1,
+  "lr": 0.0002,
+  "seed": 42,
+  "include_sentence": false,
+  "prompt_version": 2,
+  "dtype": "torch.bfloat16",
+  "effective_batch": 16,
+  "train_steps": 50358,
+  "val_steps": 2000,
+  "batch_size": 16,
+  "token_lengths": {
+    "mean": 197.574,
+    "p50": 193,
+    "p95": 253,
+    "max": 329,
+    "over_max_len": 0.0
+  },
+  "train_seconds": 1928.7261047363281,
+  "n_picto_tokens": 0,
+  "split": "test",
+  "n": 8467,
+  "constrained": false,
+  "seconds": 1142.038934469223
+}

@@ -2,17 +2,14 @@
 
     random          pick uniformly from the pool
     frequency       rank by how often each pictogram appears in training
-    ngram           prefix -> next-pictogram counts with back-off, sentence ignored
-    lexical         rank by word overlap between sentence and description
-    lexical+order   same, tie-broken by position in the uncovered sentence
+    ngram           prefix -> next-pictogram counts with back-off
 
 Each writes results/<name>/predictions.jsonl in the same format as score.py, so
 metrics.py treats them identically. A zero-shot LLM baseline needs a GPU and
 lives in score.py --zero-shot.
 
-random, frequency and n-gram never read the sentence, so they are the fair
-reference for the default setting. The two lexical baselines read the full
-sentence and belong with the full-sentence runs.
+All three see only the pool and the pictograms chosen so far, never the
+sentence, and learn only from the training split.
 
 Every baseline is run twice: on the retrieval pools used by the models, and on
 pools with random distractors, which shows why retrieval matters.
@@ -25,28 +22,14 @@ from __future__ import annotations
 
 import json
 import random
-import re
 from collections import Counter, defaultdict
 from pathlib import Path
 
-from .data import NO_DESCRIPTION, Corpus, load_corpus
+from .data import NO_DESCRIPTION, load_corpus
 from .metrics import compute, table
 
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS = ROOT / "results"
-
-_WORD = re.compile(r"[a-z0-9]+")
-_STOP = {
-    "a", "an", "the", "be", "is", "are", "was", "were", "of", "in", "on", "at",
-    "to", "for", "with", "and", "or", "his", "her", "its", "their", "this",
-    "that", "these", "those", "it", "they", "he", "she", "by", "from", "as",
-}
-
-
-def words(text: str) -> list[str]:
-    """Lowercase content words"""
-    return [w for w in _WORD.findall(text.lower()) if w not in _STOP]
-
 
 # --------------------------------------------------------------------------- #
 # Rankers. Each takes a decision step and returns its pool, ranked
@@ -85,39 +68,6 @@ def rank_ngram(step: dict, ngram: dict, **_) -> list[int]:
         step["pool_ids"],
         key=lambda p: (-scores.get(p, 0.0), -(unigram.get(p, 0) if unigram else 0)),
     )
-
-
-def rank_lexical(step: dict, corpus: Corpus, **_) -> list[int]:
-    """Rank by word overlap between the sentence and each description"""
-    sentence = set(words(step["sentence"]))
-    scored = []
-    for pid in step["pool_ids"]:
-        desc = corpus.description.get(pid, NO_DESCRIPTION)
-        overlap = len(sentence & set(words(desc))) if desc != NO_DESCRIPTION else 0
-        scored.append((-overlap, pid))
-    return [pid for _, pid in sorted(scored)]
-
-
-def rank_lexical_order(step: dict, corpus: Corpus, **_) -> list[int]:
-    """Word overlap, tie-broken by earliest position not already covered.
-
-    Overlap alone cannot order the still-needed pictograms, since they all match
-    the sentence; position gives the baseline a way to choose.
-    """
-    tokens = words(step["sentence"])
-    covered: set[str] = set()
-    for pid in step["prefix_ids"]:
-        covered |= set(words(corpus.description.get(pid, "")))
-
-    scored = []
-    for pid in step["pool_ids"]:
-        desc = corpus.description.get(pid, NO_DESCRIPTION)
-        dw = set(words(desc)) if desc != NO_DESCRIPTION else set()
-        overlap = len(set(tokens) & dw)
-        positions = [i for i, w in enumerate(tokens) if w in dw and w not in covered]
-        first = min(positions) if positions else len(tokens) + 1
-        scored.append((-overlap, first, pid))
-    return [pid for _, _, pid in sorted(scored)]
 
 
 # --------------------------------------------------------------------------- #
@@ -173,8 +123,6 @@ def run(negatives: str = "retrieval", split: str = "test") -> dict[str, dict]:
         "baseline_random": lambda s: rank_random(s, rng=rng),
         "baseline_frequency": lambda s: rank_frequency(s, freq=freq),
         "baseline_ngram": lambda s: rank_ngram(s, ngram=ngram),
-        "baseline_lexical": lambda s: rank_lexical(s, corpus=corpus),
-        "baseline_lexical_order": lambda s: rank_lexical_order(s, corpus=corpus),
     }
 
     # Frequency and n-gram never look at the pool, so they can also rank every

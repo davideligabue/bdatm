@@ -1,8 +1,8 @@
-# Training an LLM for the Iterative Selection of Pictograms
+# Training LLMs for the Iterative Selection of Pictograms
 
 **BDATM project 3.** Fine-tuning a language model to pick the next ARASAAC pictogram while an AAC sentence is being built, and comparing **three ways of representing that choice in the model's output**.
 
-AAC (Augmentative and Alternative Communication) lets people who cannot rely on speech build sentences one pictogram at a time. Given the sentence and the pictograms already chosen, the model proposes the next one.
+AAC (Augmentative and Alternative Communication) lets people who cannot rely on speech build sentences one pictogram at a time. Given the pictograms already chosen, the model proposes the next one.
 
 
 | mode    | the model outputs                      | example               |
@@ -12,9 +12,7 @@ AAC (Augmentative and Alternative Communication) lets people who cannot rely on 
 | `picto` | a dedicated new vocabulary token       | `[PICTO_11118]`       |
 
 
-As in the project brief, the model sees **the pictograms chosen so far** and, for `id` and `text`, a pool of 8 candidate pictograms. Follow-up experiments: constrained decoding with a prefix trie, picto-tokens initialised from the pictogram **image**, three models of two families, and, as an upper bound, the same runs with the whole target sentence in the prompt.
-
-`REPORT.md` is the full write-up; this file explains how to run things.
+As in the project brief, the model sees **the pictograms chosen so far** and, for `id` and `text`, a pool of 8 candidate pictograms. Follow-up experiments: constrained decoding with a prefix trie, picto-tokens initialised from the pictogram **image**, and three models of two families.
 
 ## Results at a glance
 
@@ -29,7 +27,7 @@ As in the project brief, the model sees **the pictograms chosen so far** and, fo
 | `picto`, all@5     | 0.133       | 0.131        | 0.132      |
 
 
-Non-neural reference: the n-gram with back-off scores 0.387 Hit@1 and 0.108 all@5. Picto-tokens initialised from the **image** reach 0.342 on the pictograms with no text description, against 0.272 from text, on both Qwen models. With the whole sentence in the prompt (upper bound) the 2B model reaches 0.784 Hit@1.
+Non-neural reference: the n-gram with back-off scores 0.387 Hit@1 and 0.108 all@5. Picto-tokens initialised from the **image** reach 0.342 on the pictograms with no text description, against 0.272 from text, on both Qwen models.
 
 ## Setup
 
@@ -39,7 +37,7 @@ source .venv/bin/activate
 export HF_TOKEN=hf_...      # see "Data" below
 ```
 
-Python 3.10 or newer and an NVIDIA GPU with at least 8 GB (to run exactly all the same experiments. Install the `torch` build that matches your CUDA driver first if the default one does not (see the comment at the top of `requirements.txt`).
+Python 3.10 or newer and an NVIDIA GPU with at least 8 GB. Install the `torch` build that matches your CUDA driver first if the default one does not (see the comment at the top of `requirements.txt`).
 
 ## Running
 
@@ -49,23 +47,21 @@ Python 3.10 or newer and an NVIDIA GPU with at least 8 GB (to run exactly all th
 ./status.sh                 # what is running, and the numbers so far
 ```
 
-`run_all.sh` runs every stage in order and skips a stage whose output already exists, so it can be stopped and restarted at any time. **This repository ships the predictions it produced** (that is what lets the notebook run without a GPU), so without `--fresh` every stage would be skipped; `--fresh` clears `results/`, `runs/` and `cache/` first. `REPRODUCE.md` lists the commands for the other models and experiments, and which numbers should match exactly.
+`run_all.sh` runs every stage in order and skips a stage whose output already exists, so it can be stopped and restarted at any time. **This repository ships the predictions it produced** (that is what lets the notebook run without a GPU), so without `--fresh` every stage would be skipped; `--fresh` clears `results/`, `runs/` and `cache/` first. `MODEL=Qwen/Qwen3.5-0.8B ./run_all.sh` or `MODEL=LiquidAI/LFM2.5-350M ./run_all.sh` runs the same experiments on the other models.
 
 Individual steps, if you prefer to run them by hand:
 
 ```bash
 python -m src.data                                # build the dataset cache, print statistics
-python -m src.baselines                           # non-neural baselines, CPU, ~1 minute
+python -m src.baselines                           # non-neural baselines
 python -m src.train --mode id                     # also: --mode text, --mode picto
 python -m src.train --mode picto --init image     # picto-tokens from the pictogram images
 python -m src.score --run id_Qwen3.5-2B           # rank the candidates, write predictions
-python -m src.score --run picto_text_Qwen3.5-2B --constrain
 python -m src.vision_features                     # encode the pictogram images, once
-python tools/constraint_study.py                  # constraint variants, CPU only
-python notebook_build.py                          # regenerate notebook.ipynb
+python tools/constraint_study.py                  # constraint variants
 ```
 
-Options: `--model Qwen/Qwen3.5-0.8B` or `--model LiquidAI/LFM2.5-350M` for the other models, `--seed N`, and `--full-sentence` for the upper-bound setting. Every hyperparameter is a named constant at the top of `src/train.py` and `src/model.py`. `python -m src.score --zero-shot Qwen/Qwen3.5-2B` scores a model without fine-tuning.
+Options: `--model Qwen/Qwen3.5-0.8B` or `--model LiquidAI/LFM2.5-350M` for the other models, and `--seed N`. Every hyperparameter is a named constant at the top of `src/train.py` and `src/model.py`. `python -m src.score --zero-shot Qwen/Qwen3.5-2B` scores a model without fine-tuning.
 
 ## Repository structure
 
@@ -77,32 +73,26 @@ src/                        the pipeline, one file per step
   train.py                  fine-tuning, one script for every mode
   score.py                  trained model -> ranked candidates in results/<run>/predictions.jsonl
   metrics.py                predictions -> Hit@k and MRR, strict and relaxed, with intervals
-  baselines.py              random, frequency, n-gram, lexical overlap
+  baselines.py              random, frequency, n-gram
   constraints.py            prefix trie used for constrained decoding
   vision_features.py        pictogram images -> vectors, with the model's own vision encoder
 
 tools/
-  smoke_test.sh             20-minute end-to-end check
-  constraint_study.py       re-ranks saved scores under many constraint settings (CPU)
-  check_missing_descriptions.py   independent check of the 681 pictograms with no description
+  smoke_test.sh             ~20-minute end-to-end check on tiny data
+  constraint_study.py       re-ranks the saved scores under different prefix tries (CPU)
 
 run_all.sh                  every experiment for one model, resumable
 status.sh                   progress and results so far
 setup.sh                    creates the virtual environment
 requirements.txt            exact versions used
 
-notebook.ipynb              tables, plots and error analysis, reads results/ only (no GPU)
-notebook_build.py           generates notebook.ipynb
-REPORT.md                   the written report: motivation, method, results, discussion
-documentation.md            every module and function: inputs, outputs, callers
-REPRODUCE.md                what to run and what will match
+notebook.ipynb              tables, plots and error analysis, reads results/ only
 
 results/<run>/              predictions.jsonl (one ranked list per test decision)
 runs/<run>/meta.json        training settings, timings and loss curve (adapters not included)
-figures/                    plots written by the notebook
 ```
 
-Run names are `<mode>_<model>`, for example `picto_text_Qwen3.5-2B` (picto mode, text initialisation); `_constrained` marks constrained decoding, `_seed43` another seed, `_fullsent` the upper-bound setting.
+Run names are `<mode>_<model>`, for example `picto_text_Qwen3.5-2B` (picto mode, text initialisation); `_constrained` marks constrained decoding, `_seed43` another seed.
 
 ## Data
 
@@ -113,9 +103,9 @@ Run names are `<mode>_<model>`, for example `picto_text_Qwen3.5-2B` (picto mode,
 | `disi-unibo-nlp-students/ARASAAC-Pictograms`            | 12,464 pictograms: keywords, categories, 500×500 PNG    |
 
 
-Both datasets are gated. A valid `HF_TOKEN` is not enough: the account must have been **granted access** to both repositories, otherwise the Hub answers 401 and `src/data.py` stops with that hint. Both are pinned to a fixed commit, so a later upload cannot change any number. Without a connection the loader falls back to the local HuggingFace cache.
+Both datasets are gated. A valid `HF_TOKEN` is not enough: the account must have been **granted access** to both repositories. Without a connection the loader falls back to the local HuggingFace cache.
 
-The study uses 12,000 / 1,500 / 2,000 sentences for train / validation / test (50,358 / 6,201 / 8,467 decision steps), split by sentence. Each decision offers 8 candidates: the pictograms the sentence still needs plus distractors retrieved by TF-IDF, as the project brief asks.
+The study uses 12,000 / 1,500 / 2,000 sentences for train / validation / test (50,358 / 6,201 / 8,467 decision steps), split by sentence. Each decision offers 8 candidates: the pictograms the sentence still needs plus distractors retrieved by TF-IDF.
 
 ## Hardware
 

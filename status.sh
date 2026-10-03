@@ -101,9 +101,8 @@ def row(name):
 names = sorted(d.name for d in R.iterdir()
                if (d / "predictions.jsonl").exists() and not d.name.startswith(("_", "randneg_")))
 groups = {
-    "BASELINES (never read the sentence, except lexical)": [n for n in names if n.startswith("baseline_")],
-    "RESULTS  default setting: pictograms chosen so far": [n for n in names if not n.startswith("baseline_") and "fullsent" not in n],
-    "REFERENCE  full sentence in the prompt (older runs, upper bound)": [n for n in names if "fullsent" in n],
+    "BASELINES (never read the sentence)": [n for n in names if n.startswith("baseline_")],
+    "RESULTS  pictograms chosen so far": [n for n in names if not n.startswith("baseline_")],
 }
 print("\nhit@k: right pictogram in the top k of the pool of 8.  all@k: in the top k of all")
 print("pictograms (picto, frequency, n-gram).  Strict metrics; relaxed ones are in the notebook")

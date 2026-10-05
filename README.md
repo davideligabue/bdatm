@@ -88,6 +88,8 @@ requirements.txt            exact versions used
 
 notebook.ipynb              tables, plots and error analysis, reads results/ only
 
+presentation.pptx           slide presentation of the project
+
 results/<run>/              predictions.jsonl (one ranked list per test decision)
 runs/<run>/meta.json        training settings, timings and loss curve (adapters not included)
 ```

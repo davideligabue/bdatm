@@ -34,7 +34,7 @@ Non-neural reference: the n-gram with back-off scores 0.387 Hit@1 and 0.108 all@
 ```bash
 ./setup.sh                  # creates .venv and installs the pinned dependencies
 source .venv/bin/activate
-export HF_TOKEN=hf_...      # see "Data" below
+export HF_TOKEN=hf_...      # see "Data" below (or run `hf auth login` once if Jupyter runs in an IDE)
 ```
 
 Python 3.10 or newer and an NVIDIA GPU with at least 8 GB. Install the `torch` build that matches your CUDA driver first if the default one does not (see the comment at the top of `requirements.txt`).
